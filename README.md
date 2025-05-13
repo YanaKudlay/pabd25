@@ -24,7 +24,7 @@ housing_price_prediction/
 ```
 
 ### Архитектура сервиса ПА
-![](arch.png)
+![](img/arch.png)
 
 
 ### Данные
