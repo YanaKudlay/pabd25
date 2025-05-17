@@ -27,6 +27,10 @@ dictConfig(
 
 app = Flask(__name__)
 
+
+def price_by_area(area: int) -> int:
+    return 300000 * int(area)
+
 # Маршрут для отображения формы
 @app.route('/')
 def index():
@@ -40,8 +44,14 @@ def process_numbers():
     data = request.get_json()
     
     app.logger.info(f'Requst data: {data}')
+
+    filled_area = int(data['area'])
+
+    price = price_by_area(filled_area)
     
-    return {'status': 'success', 'data': 'Числа успешно обработаны'}
+    app.logger.info(f'Calculated price: {price}')
+
+    return {'Цена квартиры': price}
 
 if __name__ == '__main__':
     app.run(debug=True)
