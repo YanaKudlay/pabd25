@@ -1,6 +1,10 @@
-from flask import Flask, render_template, request 
+from flask import Flask, render_template, request, jsonify
 from logging.config import dictConfig
+import joblib  # Для загрузки модели
+import os
+import numpy as np
 
+# Логгирование
 dictConfig(
     {
         "version": 1,
@@ -14,7 +18,7 @@ dictConfig(
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stdout",
                 "formatter": "default",
-            },         
+            },
             "file": {
                 "class": "logging.FileHandler",
                 "filename": "service/flask.log",
@@ -27,31 +31,45 @@ dictConfig(
 
 app = Flask(__name__)
 
+# === Загрузка модели ===
+MODEL_PATH = '/Users/yanak/Projects/pabd25/models/linear_regression_model.pkl'
+model = None
 
-def price_by_area(area: int) -> int:
-    return 300000 * int(area)
+try:
+    model = joblib.load(MODEL_PATH)
+    app.logger.info("Model loaded successfully.")
+except Exception as e:
+    app.logger.error(f"Failed to load model: {e}")
 
-# Маршрут для отображения формы
+# === Вспомогательная функция предсказания ===
+def predict_price(area: int) -> float:
+    if model:
+        # Преобразуем в нужный формат (например, [[area]])
+        input_data = np.array([[area]])
+        prediction = model.predict(input_data)
+        price = round(float(prediction[0]), 2)
+        return  format(price, ',')  
+    else:
+        raise RuntimeError("Model is not loaded")
+
+# === Маршруты ===
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Маршрут для обработки данных формы
 @app.route('/api/numbers', methods=['POST'])
 def process_numbers():
-    # Здесь можно добавить обработку полученных чисел
-    # Для примера просто возвращаем их обратно
     data = request.get_json()
-    
-    app.logger.info(f'Requst data: {data}')
+    app.logger.info(f'Request data: {data}')
 
-    filled_area = int(data['area'])
-
-    price = price_by_area(filled_area)
-    
-    app.logger.info(f'Calculated price: {price}')
-
-    return {'Цена квартиры': price}
+    try:
+        filled_area = int(data['area'])
+        predicted_price = predict_price(filled_area)
+        app.logger.info(f'Predicted price: {predicted_price}')
+        return jsonify({'Цена квартиры': predicted_price})
+    except Exception as e:
+        app.logger.error(f"Error during prediction: {e}")
+        return jsonify({'error': 'Ошибка при обработке данных'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
