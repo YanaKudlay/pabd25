@@ -32,7 +32,7 @@ dictConfig(
 app = Flask(__name__)
 
 # === Загрузка модели ===
-MODEL_PATH = '/Users/yanak/Projects/pabd25/models/linear_regression_model.pkl'
+MODEL_PATH = '/Users/yanak/Projects/pabd25/models/linear_regression_model2.pkl'
 model = None
 
 try:
@@ -46,7 +46,7 @@ def predict_price(area: int) -> str:
     if model:
         input_data = np.array([[area]])
         prediction = model.predict(input_data)
-        price = round(float(prediction[0]) / 100, 2)  # исходная цена
+        price = round(float(prediction[0]), 2)  # исходная цена
         millions = int(price // 1_000_000)
         thousands = int((price % 1_000_000) // 1_000)
         return f"{millions} млн {thousands} тыс"
