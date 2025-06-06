@@ -42,13 +42,14 @@ except Exception as e:
     app.logger.error(f"Failed to load model: {e}")
 
 # === Вспомогательная функция предсказания ===
-def predict_price(area: int) -> float:
+def predict_price(area: int) -> str:
     if model:
-        # Преобразуем в нужный формат (например, [[area]])
         input_data = np.array([[area]])
         prediction = model.predict(input_data)
-        price = round(float(prediction[0]), 2)
-        return  format(price, ',')  
+        price = round(float(prediction[0]) / 100, 2)  # исходная цена
+        millions = int(price // 1_000_000)
+        thousands = int((price % 1_000_000) // 1_000)
+        return f"{millions} млн {thousands} тыс"
     else:
         raise RuntimeError("Model is not loaded")
 
