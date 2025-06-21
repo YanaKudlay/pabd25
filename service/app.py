@@ -32,7 +32,7 @@ dictConfig(
 app = Flask(__name__)
 
 # === Загрузка модели ===
-MODEL_PATH = '/Users/yanak/Projects/pabd25/models/linear_regression_model2.pkl'
+MODEL_PATH = '/Users/yanak/Projects/pabd25/models/linear_regression_v2.pkl'
 model = None
 
 try:
