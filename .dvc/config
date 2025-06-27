@@ -1,0 +1,7 @@
+[core]
+    remote = storage
+['remote "local-storage"']
+    url = ../../dvc-storage
+['remote "storage"']
+    url = s3://pabd25/yvkudlay
+    endpointurl = https://storage.yandexcloud.net
