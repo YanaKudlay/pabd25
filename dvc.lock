@@ -5,8 +5,8 @@ stages:
     deps:
     - path: .\src\preprocess_data.py
       hash: md5
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
+      md5: 4576dae1c3cb3fa7bb12d542f69c6519
+      size: 2686
   train:
     cmd: python .\src\train.py
     deps:

@@ -44,7 +44,7 @@ def parse_cian(n_rooms=1):
     moscow_parser = cianparser.CianParser(location="Москва")
 
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-    csv_path = f"data/raw/{n_rooms}_{t}.csv"
+    csv_path = f"new_data/raw/{n_rooms}_{t}.csv"
     data = moscow_parser.get_flats(
         deal_type="sale",
         rooms=(n_rooms,),
